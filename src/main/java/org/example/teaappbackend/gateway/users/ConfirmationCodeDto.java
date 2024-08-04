@@ -11,17 +11,17 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
-@Schema(description = "Запрос на регистрацию")
+@Schema(description = "Запрос на подтверждение аккаунта")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDto {
-    @Schema(description = "Почта пользовтеля", example = "vlad.fox2002@mail.ru")
+public class ConfirmationCodeDto {
+    @Schema(description = "Почта пользовтеля", example = "sofia.kage@mail.ru")
     @NotBlank(message = "Почта пользователя не может быть пустой")
     @Size(min = 5, max = 255, message = "Почта пользовтаеля должна содержать от 5 до 255 символов")
     @Email(message = "Невалидный формать почты")
     private String email;
 
     //todo: добавить мб более сложную валидацию пароля
-    @Schema(description = "Пароль пользователя", example = "password")
+    @Schema(description = "Пароль пользователя", example = "password1029Laq!")
     @Size(min = 8, max = 255, message = "Длина пароля должна быть не менее 8 символов, и не более 255")
     private String password;
 }

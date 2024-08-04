@@ -6,11 +6,11 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 import java.time.OffsetDateTime;
-
-@Entity
 @SuperBuilder
-@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@MappedSuperclass
+@Data
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public abstract class BaseEntity {
     @Id
@@ -19,11 +19,11 @@ public abstract class BaseEntity {
     Long id;
 
     @EqualsAndHashCode.Exclude
-    @Column(name = "last_update_date")
+    @Column(name = "last_update_date", nullable = false)
     OffsetDateTime lastUpdateDate;
 
     @EqualsAndHashCode.Exclude
-    @Column(name = "saving_time")
+    @Column(name = "saving_time", nullable = false)
     OffsetDateTime savingTime;
 
     @PrePersist

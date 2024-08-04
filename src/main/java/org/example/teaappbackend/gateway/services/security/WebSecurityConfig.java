@@ -70,23 +70,6 @@ public class WebSecurityConfig {
                                         .logoutUrl("/logout")
                                         .permitAll()
                 );
-
-                /*.authorizeHttpRequests(
-                        authorizationManagerRequestMatcherRegistry ->
-                                authorizationManagerRequestMatcherRegistry
-                                        .anyRequest().permitAll()
-                )
-                .formLogin(
-                        httpSecurityFormLoginConfigurer ->
-                                httpSecurityFormLoginConfigurer.loginProcessingUrl("/login")
-                                        .permitAll()
-                )
-                .logout(
-                        httpSecurityLogoutConfigurer ->
-                                httpSecurityLogoutConfigurer
-                                        .logoutUrl("/logout")
-                                        .permitAll()
-                );*/
         return httpSecurity.build();
     }
     @Bean

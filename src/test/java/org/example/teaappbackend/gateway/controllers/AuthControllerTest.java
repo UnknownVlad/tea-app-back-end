@@ -6,12 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.example.teaappbackend.exceptions.dtos.ComplexExceptionResponseDto;
 import org.example.teaappbackend.gateway.users.UserDto;
+import org.example.teaappbackend.mail.sender.MailSender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -28,23 +30,26 @@ class AuthControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @MockBean
+    private MailSender mailSender;
+    private static final UserDto REQUEST_VALID_USER = UserDto.builder()
+            .email("vlad.fox2002@mail.ru")
+            .password("qsagnAsaflbe!asfb!#FA")
+            .build();
+
     @SneakyThrows
     @Test
-    void signUp(){
-
+    void signUpValid(){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         httpHeaders.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+
         ResponseEntity<?> responseEntity = restTemplate
                 .exchange(
                         "/auth/sing-up",
                         HttpMethod.POST,
                         new HttpEntity<>(
-                                UserDto.builder()
-                                        .email("fedor.mor")
-                                        .password("bad")
-                                        .build(),
+                                REQUEST_VALID_USER,
                                 httpHeaders
 
                         ),
@@ -52,8 +57,9 @@ class AuthControllerTest {
                 );
 
         Assertions.assertEquals(
-                HttpStatus.BAD_REQUEST, responseEntity.getStatusCode()
+                HttpStatus.OK, responseEntity.getStatusCode()
         );
+        System.out.println(responseEntity.getBody());
         /*Assertions.assertEquals(
                 BAD_REQUEST_SING_UP_BODY,
                 objectMapper.writeValueAsString(responseEntity.getBody())

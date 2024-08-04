@@ -16,9 +16,10 @@ import org.example.teaappbackend.gateway.BaseEntity;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthCode extends BaseEntity {
+    @Column(name = "code", nullable = false)
     String code;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    /*@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    User user;
+    User user;*/
 }
