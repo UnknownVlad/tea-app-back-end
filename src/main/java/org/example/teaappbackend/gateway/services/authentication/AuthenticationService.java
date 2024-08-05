@@ -2,10 +2,10 @@ package org.example.teaappbackend.gateway.services.authentication;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.teaappbackend.gateway.dtos.JwtAuthenticationDto;
 import org.example.teaappbackend.gateway.services.UserService;
 import org.example.teaappbackend.gateway.services.jwt.JwtService;
 import org.example.teaappbackend.gateway.services.verification.VerificationCodeGeneratorService;
-import org.example.teaappbackend.gateway.services.verification.VerificationCodeGeneratorServiceImpl;
 import org.example.teaappbackend.gateway.users.*;
 import org.example.teaappbackend.mail.sender.MailSender;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,24 +33,25 @@ public class AuthenticationService {
         roles.add(Role.ROLE_USER);
 
         String email = request.getEmail();
-        User user = new User();
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setIsEnabled(false);
-        user.setEmail(email);
-        user.setUsername(email);
+        User user = User.builder()
+                .password(passwordEncoder.encode(request.getPassword()))
+                .isEnabled(false)
+                .email(request.getEmail())
+                .username(request.getEmail())
+                .roles(roles)
+                .build();
 
         String verificationCode = verificationCodeGeneratorService.generate();
 
-        //todo: добавить кафка-очередь на отправку сообщений на почту
-        //mailSender.sendMessage(email, "Verificate u'r account", verificationCode);
+        AuthCode authCode = AuthCode.builder()
+                .code(verificationCode)
+                .isSent(false)
+                .user(user)
+                .build();
 
-        user.setAuthCode(
-                AuthCode.builder()
-                        .code(passwordEncoder.encode(verificationCode))
-                        .build()
-        );
+        user.setAuthCode(authCode);
 
-        userService.save(user, roles);
+        userService.save(user);
         var jwt = jwtService.generateToken(user);
         return new JwtAuthenticationDto(jwt);
     }

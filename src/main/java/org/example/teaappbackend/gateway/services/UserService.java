@@ -23,13 +23,11 @@ public class UserService {
     private final UserRepository userRepository;
 
 
-    /*public User save(User user){
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.ROLE_USER);
-        user.setRoles(roles);
-
-        return save(user, roles);
-    }*/
+    public User save(User user){
+        if (userRepository.existsByEmail(user.getEmail()))
+            throw new UserExistsException(USER_EXISTS_EXCEPTION_MESSAGE);
+        return userRepository.save(user);
+    }
     public User save(User user, Collection<Role> roles) {
         log.debug("Пробую сохранить пользователя: {}, с ролями: {}", user, roles);
 
@@ -37,8 +35,8 @@ public class UserService {
             throw new UserExistsException(USER_EXISTS_EXCEPTION_MESSAGE);
         user.setRoles(roles);
         log.debug("У меня вообще-то почта: {}", user.getEmail());
-        User saved = userRepository.save(user);
-        return saved;
+
+        return userRepository.save(user);
     }
 
     public User findByEmail(String email) {

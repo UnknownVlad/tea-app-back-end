@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.teaappbackend.exceptions.dtos.ComplexExceptionResponseDto;
 import org.example.teaappbackend.gateway.services.authentication.AuthenticationService;
-import org.example.teaappbackend.gateway.users.JwtAuthenticationDto;
+import org.example.teaappbackend.gateway.dtos.JwtAuthenticationDto;
 import org.example.teaappbackend.gateway.users.UserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

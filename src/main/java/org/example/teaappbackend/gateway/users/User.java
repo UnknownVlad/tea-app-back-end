@@ -37,12 +37,13 @@ public class User extends BaseEntity implements UserDetails {
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     Collection<Role> roles;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    AuthCode authCode;
-
     @Column(name = "is_enabled")
     Boolean isEnabled;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    AuthCode authCode;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
