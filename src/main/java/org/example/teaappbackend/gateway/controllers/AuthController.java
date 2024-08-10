@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.teaappbackend.aspect.Logged;
+import org.example.teaappbackend.aspect.ejectors.AuthKeyEjector;
 import org.example.teaappbackend.exceptions.dtos.ComplexExceptionResponseDto;
 import org.example.teaappbackend.gateway.dtos.ConfirmationAccountDto;
 import org.example.teaappbackend.gateway.services.authentication.AuthenticationService;
@@ -31,6 +33,7 @@ public class AuthController {
     private final AuthenticationService authenticationService;
     private final ConfirmationService confirmationService;
 
+    @Logged(keyEjector = AuthKeyEjector.class)
     @Operation(summary = "регистрация")
     @PostMapping("/sing-up")
     @ApiResponses(value = {
@@ -43,7 +46,7 @@ public class AuthController {
         log.debug("Пришел запрос на регистрацию с следующими параметрами: {}", request);
         return ResponseEntity.ok(authenticationService.signUp(request));
     }
-
+    @Logged(keyEjector = AuthKeyEjector.class)
     @Operation(summary = "Авторизация пользователя")
     @PostMapping("/sign-in")
     @ApiResponses(value = {
