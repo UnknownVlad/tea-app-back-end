@@ -3,17 +3,20 @@ package org.example.teaappbackend.gateway.services.authentication;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.teaappbackend.gateway.dtos.JwtAuthenticationDto;
+import org.example.teaappbackend.gateway.dtos.UserDto;
+import org.example.teaappbackend.gateway.mappers.AuthCodeMapper;
+import org.example.teaappbackend.gateway.mappers.UserMapper;
 import org.example.teaappbackend.gateway.services.UserService;
 import org.example.teaappbackend.gateway.services.jwt.JwtService;
 import org.example.teaappbackend.gateway.services.verification.VerificationCodeGeneratorService;
-import org.example.teaappbackend.gateway.users.*;
-import org.example.teaappbackend.mail.sender.MailSender;
+import org.example.teaappbackend.gateway.users.AuthCode;
+import org.example.teaappbackend.gateway.users.Role;
+import org.example.teaappbackend.gateway.users.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -22,40 +25,27 @@ import java.util.Set;
 public class AuthenticationService {
     private final UserService userService;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final VerificationCodeGeneratorService verificationCodeGeneratorService;
-    private final MailSender mailSender;
+    private final UserMapper userMapper;
+    private final AuthCodeMapper authCodeMapper;
 
+    @Transactional
     public JwtAuthenticationDto signUp(UserDto request) {
         log.debug("Пробую зарегестрировать пользователя: {}", request);
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.ROLE_USER);
 
-        String email = request.getEmail();
-        User user = User.builder()
-                .password(passwordEncoder.encode(request.getPassword()))
-                .isEnabled(false)
-                .email(request.getEmail())
-                .username(request.getEmail())
-                .roles(roles)
-                .build();
+        User user = userMapper.toEntity(request, Set.of(Role.ROLE_USER), false);
 
-        String verificationCode = verificationCodeGeneratorService.generate();
-
-        AuthCode authCode = AuthCode.builder()
-                .code(verificationCode)
-                .isSent(false)
-                .user(user)
-                .build();
+        AuthCode authCode = authCodeMapper.toEntity(verificationCodeGeneratorService.generate(), false, user);
 
         user.setAuthCode(authCode);
 
         userService.save(user);
-        var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationDto(jwt);
+
+        return new JwtAuthenticationDto(jwtService.generateToken(user));
     }
 
+    @Transactional
     public JwtAuthenticationDto signIn(UserDto request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getEmail(),
@@ -69,4 +59,5 @@ public class AuthenticationService {
         var jwt = jwtService.generateToken(user);
         return new JwtAuthenticationDto(jwt);
     }
+
 }

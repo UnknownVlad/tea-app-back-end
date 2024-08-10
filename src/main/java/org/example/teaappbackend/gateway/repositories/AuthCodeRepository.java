@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AuthCodeRepository extends JpaRepository<AuthCode, Long> {
@@ -16,6 +17,7 @@ public interface AuthCodeRepository extends JpaRepository<AuthCode, Long> {
     @Query("SELECT a FROM AuthCode a WHERE a.isSent = false ORDER BY a.savingTime DESC")
     List<AuthCode> findNotSentCodes(Pageable pageable);
 
+    Optional<AuthCode> findByCode(String code);
 
     int countAllByIsSentFalse();
 

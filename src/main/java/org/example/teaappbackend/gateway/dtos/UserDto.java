@@ -1,4 +1,4 @@
-package org.example.teaappbackend.gateway.users;
+package org.example.teaappbackend.gateway.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -18,10 +18,10 @@ public class UserDto {
     @NotBlank(message = "Почта пользователя не может быть пустой")
     @Size(min = 5, max = 255, message = "Почта пользовтаеля должна содержать от 5 до 255 символов")
     @Email(message = "Невалидный формать почты")
-    private String email;
+    String email;
 
     //todo: добавить мб более сложную валидацию пароля
     @Schema(description = "Пароль пользователя", example = "password")
     @Size(min = 8, max = 255, message = "Длина пароля должна быть не менее 8 символов, и не более 255")
-    private String password;
+    String password;
 }

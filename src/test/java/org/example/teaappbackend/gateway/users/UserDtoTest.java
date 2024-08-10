@@ -4,7 +4,7 @@ package org.example.teaappbackend.gateway.users;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
+import org.example.teaappbackend.gateway.dtos.UserDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

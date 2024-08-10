@@ -27,7 +27,7 @@ public abstract class BaseEntity {
     OffsetDateTime savingTime;
 
     @PrePersist
-    public void onUpdate(){
+    public void onPersist(){
         lastUpdateDate = OffsetDateTime.now();
         savingTime = savingTime == null ? OffsetDateTime.now() : savingTime;
     }

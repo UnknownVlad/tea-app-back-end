@@ -1,11 +1,7 @@
 package org.example.teaappbackend.gateway.controllers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.SneakyThrows;
-import org.example.teaappbackend.exceptions.dtos.ComplexExceptionResponseDto;
-import org.example.teaappbackend.gateway.users.UserDto;
+import org.example.teaappbackend.gateway.dtos.UserDto;
 import org.example.teaappbackend.mail.sender.MailSender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,11 +14,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-
-import java.util.Map;
-
-import static org.example.teaappbackend.gateway.controllers.RestTestConstants.BAD_REQUEST_SING_UP_BODY;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

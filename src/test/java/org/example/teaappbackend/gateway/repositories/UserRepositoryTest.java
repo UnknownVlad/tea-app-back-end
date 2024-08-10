@@ -24,6 +24,7 @@ class UserRepositoryTest {
     @Test
     void insert(){
         User saved =  userRepository.save(user);
+
         System.out.println(saved);
     }
 
